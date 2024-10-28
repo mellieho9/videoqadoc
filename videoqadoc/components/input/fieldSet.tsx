@@ -18,7 +18,7 @@ export const FieldSet: React.FC<FieldSetProps> = ({
 }) => {
   return (
     <div className="w-full max-w-md">
-      <p className="text-lg font-medium mb-2">{question}</p>
+      <p className="font-medium mb-2">{question}</p>
       <RadioGroup
         name={name}
         value={value}
@@ -29,7 +29,7 @@ export const FieldSet: React.FC<FieldSetProps> = ({
           <Radio
             key={`${option}-${index}`}
             value={option}
-            className="max-w-full"
+            className="text-md max-w-full"
           >
             {option}
           </Radio>

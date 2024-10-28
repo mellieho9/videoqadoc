@@ -83,7 +83,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({ onChange, value }) => {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">
+      <h3 className="font-medium">
         What timepoints help you answer the above question?
       </h3>
 
