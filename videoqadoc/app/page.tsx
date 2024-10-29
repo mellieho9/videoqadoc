@@ -36,14 +36,13 @@ export default function Home() {
   ];
 
   return (
-    <>
+    <div className="flex flex-col">
       <HomeBar />
-      <section className="w-full h-full flex flex-row items-start justify-center gap-4 p-10">
-        <div className="w-1/2 ">
-          <h3 className="font-bold">Videos you need to annotate</h3>
+      <section className="w-full h-full flex flex-col md:flex-row items-start justify-center gap-4 p-10">
+        <div className="w-full md:w-1/2 ">
           <QuestionList questions={mockQuestions} />
         </div>
-        <div className="flex flex-col w-1/3 gap-4">
+        <div className="flex flex-col w-full md:w-1/3 gap-4">
           <Card className="p-5">
             <CardHeader className="justify-center font-bold">
               Your progress
@@ -54,13 +53,13 @@ export default function Home() {
                   svg: "w-36 h-36 drop-shadow-md",
                   value: "text-3xl font-semibold text-white",
                 }}
-                value={45}
+                value={33}
                 color="primary"
                 showValueLabel={true}
               />
             </CardBody>
             <CardFooter className="justify-center">
-              <p className="text-sm">2 out of 6 questions</p>
+              <p className="text-sm">3 out of 9 questions</p>
             </CardFooter>
           </Card>
           <Card className="p-5">
@@ -88,6 +87,6 @@ export default function Home() {
           </Card>
         </div>
       </section>
-    </>
+    </div>
   );
 }

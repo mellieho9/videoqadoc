@@ -2,15 +2,14 @@
 
 import React from "react";
 import { Navbar, Button } from "@nextui-org/react";
-import { Home, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
+import HomeButton from "./homeButton";
 
 const HomeBar = () => {
   return (
     <Navbar className="px-4" isBordered>
       <div className="flex w-full justify-between items-center">
-        <Button isIconOnly variant="light">
-          <Home className="h-4 w-4" />
-        </Button>
+        <HomeButton />
         <Button
           variant="light"
           className="text-danger"
