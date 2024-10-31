@@ -28,7 +28,6 @@ const ProgressDropdown: React.FC<ProgressDropdownProps> = ({
   progressPercentage,
   groupedQuestions,
 }) => {
-  console.log(groupedQuestions);
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -53,9 +52,10 @@ const ProgressDropdown: React.FC<ProgressDropdownProps> = ({
         disallowEmptySelection
         selectionMode="single"
         aria-label="Questions"
+        className="max-h-[300px] overflow-y-auto" // Add max height and overflow for scrollable menu
       >
         {Object.entries(groupedQuestions).map(([section, sectionQuestions]) => (
-          <DropdownSection key={section} showDivider title={section}>
+          <DropdownSection key={section} title={section}>
             {sectionQuestions.map((question) => (
               <DropdownItem
                 key={question.id}

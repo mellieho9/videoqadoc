@@ -108,7 +108,7 @@ async def startup_event():
 @app.get("/api/questions")
 def get_questions():
     # Return questions grouped by video
-    return [[q.toJSON() for q in videos[vid].questions] for vid in videos_ids]
+    return [[q.toJSON() for q in videos[vid].questions] for vid in videos_ids[:30]]
 
 @app.get("/api/questions/{question_id}")
 def get_question(question_id: str):

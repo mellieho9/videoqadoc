@@ -25,26 +25,25 @@ export default function TaskPage() {
   });
 
   // Submit mutation
-  // const mutation = useMutation({
-  //   mutationFn: api.submitAnswer(questionId, data),
-  //   onSuccess: () => {
-  //     // Invalidate and refetch questions list
-  //     queryClient.invalidateQueries(["questions"]);
-  //     // Optionally redirect back to questions list
-  //     // router.push('/questions');
-  //   },
-  // });
+  const mutation = useMutation({
+    // Define mutationFn to accept only questionId
+    mutationFn: (questionId) => api.submitAnswer(questionId),
+    onSuccess: () => {
+      // Invalidate and refetch questions list
+      queryClient.invalidateQueries(["questions"]);
+      // Optionally redirect back to questions list
+      // router.push('/questions');
+    },
+    onError: (error) => {
+      console.error("Error submitting answer:", error);
+    },
+  });
 
-  // const handleSubmit = () => {
-  //   mutation.mutate({
-  //     videoId,
-  //     questionId,
-  //     answer: {
-  //       selectedOption,
-  //       timeRanges,
-  //     },
-  //   });
-  // };
+  const handleSubmit = () => {
+    console.log("Handle submit called with questionId:", questionId);
+    // Call mutation.mutate with only questionId
+    mutation.mutate(questionId);
+  };
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -55,7 +54,7 @@ export default function TaskPage() {
   const questionIdx = questionId
     .split("-") // Split the string by '-'
     .map(Number) // Convert each part to a number
-    .reduce((acc, num) => acc + num, 0); // Sum the numbers
+    .reduce((acc, num) => acc + num, -1); // Sum the numbers
   return (
     <>
       <TaskBar questionIdx={questionIdx} />
@@ -75,17 +74,17 @@ export default function TaskPage() {
           <Divider />
 
           <TimeRangeContainer value={timeRanges} onChange={setTimeRanges} />
-          <Button color="primary" isDisabled={isSubmitDisabled}>
+          {/* <Button color="primary" isDisabled={isSubmitDisabled}>
             Submit
-          </Button>
-          {/* <Button
+          </Button> */}
+          <Button
             color="primary"
             isDisabled={isSubmitDisabled}
             onClick={handleSubmit}
             isLoading={mutation.isPending}
           >
             Submit
-          </Button> */}
+          </Button>
         </div>
       </section>
     </>

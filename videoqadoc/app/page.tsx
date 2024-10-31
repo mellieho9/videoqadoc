@@ -25,7 +25,9 @@ export default function Home() {
     queryFn: api.fetchQuestions,
   });
   const totalQuestions = questions.length;
-  const completedQuestions = questions.filter((q) => q.isDone).length;
+  const completedQuestions = questions
+    .flatMap((section) => section) // Flatten the 2D array into a 1D array
+    .filter((q) => q.completed).length;
   const progressPercentage =
     totalQuestions > 0 ? (completedQuestions / totalQuestions) * 100 : 0;
   return (

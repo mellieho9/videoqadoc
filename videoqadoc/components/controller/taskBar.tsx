@@ -25,7 +25,9 @@ const TaskBar = ({ questionIdx }) => {
 
   // Progress calculation
   const totalQuestions = questions.length;
-  const completedQuestions = questions.filter((q) => q.isDone).length;
+  const completedQuestions = questions
+    .flatMap((section) => section) // Flatten the 2D array into a 1D array
+    .filter((q) => q.completed).length;
   const progressPercentage =
     totalQuestions > 0 ? (completedQuestions / totalQuestions) * 100 : 0;
   const groupedQuestions = questions.reduce(
@@ -36,8 +38,6 @@ const TaskBar = ({ questionIdx }) => {
     },
     {}
   );
-
-  console.log(groupedQuestions);
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message || "Failed to load questions."}</div>;
 
