@@ -12,35 +12,32 @@ import {
 import { QuestionList } from "@/components/data/questionList";
 import HomeBar from "@/components/controller/homebar";
 import { Book, Mail } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/utils/api";
 
 export default function Home() {
-  const mockQuestions = [
-    [
-      { text: "What is the purpose of this course?", completed: true },
-      { text: "What are the key concepts covered?", completed: false },
-      { text: "How long does the course take to complete?", completed: false },
-    ],
-    [
-      { text: "What is the difference between A and B?", completed: true },
-      { text: "How do you implement feature X?", completed: true },
-      { text: "What are the best practices for Y?", completed: false },
-    ],
-    [
-      { text: "Explain the algorithm used in this module.", completed: false },
-      {
-        text: "How do you optimize performance for this use case?",
-        completed: false,
-      },
-      { text: "What are the common pitfalls to avoid?", completed: false },
-    ],
-  ];
-
+  const {
+    data: questions = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["questions"],
+    queryFn: api.fetchQuestions,
+  });
+  const totalQuestions = questions.length;
+  const completedQuestions = questions.filter((q) => q.isDone).length;
+  const progressPercentage =
+    totalQuestions > 0 ? (completedQuestions / totalQuestions) * 100 : 0;
   return (
     <div className="flex flex-col">
       <HomeBar />
-      <section className="w-full h-full flex flex-col md:flex-row items-start justify-center gap-4 p-10">
-        <div className="w-full md:w-1/2 ">
-          <QuestionList questions={mockQuestions} />
+      <section className="w-full h-full flex flex-col-reverse md:flex-row items-start justify-center gap-10 p-10">
+        <div className="w-full h-full overflow-y-auto md:w-1/2 ">
+          {isLoading ? (
+            <div>Loading...</div>
+          ) : (
+            <QuestionList questions={questions} />
+          )}
         </div>
         <div className="flex flex-col w-full md:w-1/3 gap-4">
           <Card className="p-5">
@@ -53,13 +50,15 @@ export default function Home() {
                   svg: "w-36 h-36 drop-shadow-md",
                   value: "text-3xl font-semibold text-white",
                 }}
-                value={33}
+                value={progressPercentage}
                 color="primary"
                 showValueLabel={true}
               />
             </CardBody>
             <CardFooter className="justify-center">
-              <p className="text-sm">3 out of 9 questions</p>
+              <p className="text-sm">
+                {completedQuestions} out of {totalQuestions} questions
+              </p>
             </CardFooter>
           </Card>
           <Card className="p-5">

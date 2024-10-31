@@ -12,8 +12,7 @@ import { CheckCircle2 } from "lucide-react";
 
 interface Question {
   id: string;
-  title: string;
-  isDone: boolean;
+  completed: boolean;
 }
 
 interface GroupedQuestions {
@@ -29,6 +28,7 @@ const ProgressDropdown: React.FC<ProgressDropdownProps> = ({
   progressPercentage,
   groupedQuestions,
 }) => {
+  console.log(groupedQuestions);
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -60,12 +60,12 @@ const ProgressDropdown: React.FC<ProgressDropdownProps> = ({
               <DropdownItem
                 key={question.id}
                 endContent={
-                  question.isDone && (
+                  question.completed && (
                     <CheckCircle2 className="h-4 w-4 text-success" />
                   )
                 }
               >
-                {question.title}
+                {question.id}
               </DropdownItem>
             ))}
           </DropdownSection>
