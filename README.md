@@ -1,33 +1,66 @@
-# videoqadoc
-An annotation platform that tracks users' thought process when answering video Q&amp;A
+# VideoQADoc
 
-# stack
-python, fastapi, nextjs, nextui, react-query
+An annotation platform that tracks users' thought processes when answering video Q&A questions.
 
-# getting started
-open 2 terminals
-## run the backend
-'''
+## Tech Stack
+
+- Backend: Python (FastAPI)
+- Frontend: Next.js, NextUI, React Query
+
+## Getting Started
+
+### Backend Setup
+
+Open a terminal and run:
+
+```bash
 cd api
-python3 -m venv venv // if you haven't alr
-source venv/bin/activate
-pip install -r requirements.txt
-uvicorn main:app -reload --port 8000
-'''
-## run the client
-'''
-cd videoqadoc
-npm install
-npm run dev
-'''
-go to your localhost
 
-# to-dos
-- fix the submit answer logic to record the user's answers
-- add a condition in the time input to ensure the ending timestamp do not exceed the duration of the video
-- fix bug: videoplayer stops when user interace with multiple-choice question and time-input
-- get timestamps of the video segments the user's watch from the video-player
-- add a timer in the backend to track user's time per task
-- set up database
-- discuss: how do we produce a sheet for gedas's analysis?
-- clean up code
+# Create virtual environment (if not already created)
+python3 -m venv venv
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start the server
+uvicorn main:app --reload --port 8000
+```
+
+### Frontend Setup
+
+Open another terminal and run:
+
+```bash
+cd videoqadoc
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+Visit `http://localhost:3000` in your browser to access the application.
+
+## To-Do List
+
+### Features & Fixes
+- [ ] Implement submit answer logic to record user responses
+- [ ] Add validation for time input to prevent exceeding video duration
+- [ ] Fix video player stopping when user interacts with:
+  - Multiple-choice questions
+  - Time input fields
+- [ ] Implement tracking of watched video segments
+- [ ] Add backend timer for task duration tracking
+
+### Infrastructure
+- [ ] Set up database
+- [ ] Create data export functionality for analysis
+- [ ] Code cleanup and optimization
+
+### Discussion Points
+- How to structure data export for analysis purposes?
+- Best approach for tracking user interaction metrics?
