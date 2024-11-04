@@ -34,6 +34,7 @@ export const QuestionList = ({ questions }) => {
     setFilteredQuestions(updatedQuestions);
   }, [filter, questions]);
 
+  // when you click on a question, it directs u to the task interface corresponding to that question
   const handleQuestionClick = (videoIndex, questionIndex, questionId) => {
     router.push(`/tasks/${videoIndex}/${questionId}`);
   };
@@ -43,6 +44,7 @@ export const QuestionList = ({ questions }) => {
       <div className="flex flex-col mb-4">
         <div className="flex flex-row w-full items-center justify-between">
           <h3 className="font-bold">Videos you need to annotate</h3>
+          {/* filter dropdown menu  */}
           <Select
             placeholder="Select filter"
             selectedKeys={filter}
@@ -56,7 +58,7 @@ export const QuestionList = ({ questions }) => {
         </div>
       </div>
 
-      {/* Scrollable Listbox container */}
+      {/* question list showing each question - whether they're complete */}
       <div className="flex-grow overflow-y-auto max-h-[500px]">
         <Listbox variant="flat">
           {filteredQuestions.map(

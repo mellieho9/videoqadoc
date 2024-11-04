@@ -1,7 +1,7 @@
 // app/tasks/[videoId]/[questionId]/page.tsx
 "use client";
 import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import TaskBar from "@/components/controller/taskBar";
 import { FieldSet } from "@/components/input/fieldSet";
@@ -14,55 +14,65 @@ export default function TaskPage() {
   const params = useParams();
   const queryClient = useQueryClient();
   const { videoId, questionId } = params;
+  const router = useRouter();
 
+  // keep track of answers
   const [selectedOption, setSelectedOption] = useState();
   const [timeRanges, setTimeRanges] = useState([]);
 
-  // Fetch question data
+  // fetch question data
   const { data: questionData, isLoading } = useQuery({
     queryKey: ["question", questionId],
     queryFn: () => api.fetchQuestionData(questionId),
   });
 
-  // Submit mutation
+  // submit mutation
   const mutation = useMutation({
-    // Define mutationFn to accept only questionId
     mutationFn: (questionId) => api.submitAnswer(questionId),
     onSuccess: () => {
-      // Invalidate and refetch questions list
+      // invalid and refetch questions list
       queryClient.invalidateQueries(["questions"]);
-      // Optionally redirect back to questions list
-      // router.push('/questions');
     },
     onError: (error) => {
       console.error("Error submitting answer:", error);
     },
   });
 
+  // behavior when user clicks submit
   const handleSubmit = () => {
     console.log("Handle submit called with questionId:", questionId);
-    // Call mutation.mutate with only questionId
     mutation.mutate(questionId);
+    // move to the next question
+    let videoIdx = questionId.split("-")[0];
+    let questionIdx = parseInt(questionId.split("-")[1]);
+    if (questionIdx === 3) {
+      router.push(`/tasks/${videoId + 1}/${videoIdx}-1`);
+    } else {
+      router.push(`/tasks/${videoId}/${videoIdx}-${questionIdx + 1}`);
+    }
   };
 
   if (isLoading) return <div>Loading...</div>;
 
+  // disable submit button if user hasn't answered provided all the necessary annotations
   const isSubmitDisabled =
     !selectedOption ||
     timeRanges.length === 0 ||
     timeRanges.some((range) => !range.from || !range.to || range.error);
+
   const questionIdx = questionId
-    .split("-") // Split the string by '-'
-    .map(Number) // Convert each part to a number
-    .reduce((acc, num) => acc + num, -1); // Sum the numbers
+    .split("-") // split the string by '-'
+    .map(Number) // convert each part to a number
+    .reduce((acc, num) => acc + num, -1); // sum the numbers
   return (
     <>
       <TaskBar questionIdx={questionIdx} />
+      {/* video player  */}
       <section className="w-full h-full flex flex-col md:flex-row items-center justify-center p-10 gap-4">
         <div className="w-full md:w-3/4 rounded-md">
           <YouTubeEmbed videoid={questionData?.videoId || ""} />
         </div>
-
+        {/* record answer to video question  */}
         <div className="flex flex-col p-5 gap-4">
           <FieldSet
             question={questionData?.question || ""}
@@ -72,7 +82,7 @@ export default function TaskPage() {
           />
 
           <Divider />
-
+          {/* record answer to timepoints */}
           <TimeRangeContainer value={timeRanges} onChange={setTimeRanges} />
           {/* <Button color="primary" isDisabled={isSubmitDisabled}>
             Submit

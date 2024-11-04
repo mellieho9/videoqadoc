@@ -9,8 +9,9 @@ import ProgressDropdown from "./progressDropdown";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/utils/api";
 
+// navbar in the task interface
 const TaskBar = ({ questionIdx }) => {
-  // Fetch questions using TanStack Query
+  // fetch questions
   const {
     data: questions = [],
     isLoading,
@@ -20,20 +21,20 @@ const TaskBar = ({ questionIdx }) => {
     queryFn: api.fetchQuestions,
   });
 
-  // Current question state
+  // track idx of question
   const [currentQuestion, setCurrentQuestion] = React.useState(questionIdx);
 
-  // Progress calculation
+  // calculate progress
   const totalQuestions = questions.length;
   const completedQuestions = questions
-    .flatMap((section) => section) // Flatten the 2D array into a 1D array
+    .flatMap((section) => section)
     .filter((q) => q.completed).length;
   const progressPercentage =
     totalQuestions > 0 ? (completedQuestions / totalQuestions) * 100 : 0;
   const groupedQuestions = questions.reduce(
     (acc, sectionQuestions, outerIndex) => {
-      const section = `Section ${outerIndex + 1}`; // Use the outer index as the section name
-      acc[section] = sectionQuestions; // Add all questions in the current section
+      const section = `Section ${outerIndex + 1}`; // use the outer index as the section name
+      acc[section] = sectionQuestions; // add all questions in the current section
       return acc;
     },
     {}
@@ -44,6 +45,7 @@ const TaskBar = ({ questionIdx }) => {
   return (
     <Navbar className="px-4" isBordered>
       <div className="flex w-full justify-between items-center">
+        {/* home, to previous question, to next question  */}
         <div className="flex items-center gap-1">
           <HomeButton />
           <Button
@@ -64,14 +66,17 @@ const TaskBar = ({ questionIdx }) => {
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
+        {/* where in all the questions user is at  */}
         <span className="text-small">
           Question {currentQuestion} of {totalQuestions}
         </span>
+        {/* user's progress  */}
         <div className="flex items-center">
           <ProgressDropdown
             progressPercentage={progressPercentage}
             groupedQuestions={groupedQuestions}
           />
+          {/* user click on this button to show our contact email and a doc of the task's guidelines  */}
           <HelpPopup />
         </div>
       </div>

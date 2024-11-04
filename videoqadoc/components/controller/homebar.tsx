@@ -5,6 +5,7 @@ import { Navbar, Button } from "@nextui-org/react";
 import { LogOut } from "lucide-react";
 import HomeButton from "./homeButton";
 
+// navbar on the homepage
 const HomeBar = () => {
   return (
     <Navbar className="px-4" isBordered>

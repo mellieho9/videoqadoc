@@ -14,6 +14,7 @@ interface TimeRangeContainerProps {
   value?: TimeRange[];
 }
 
+// input for recording timestamps in a vid helping user answer a question
 export const TimeRangeContainer: React.FC<TimeRangeContainerProps> = ({
   onChange,
   value,
@@ -28,6 +29,7 @@ export const TimeRangeContainer: React.FC<TimeRangeContainerProps> = ({
     return hours * 3600 + minutes * 60 + seconds;
   };
 
+  // validate time and whether end time is earlier than start time
   const validateTimeRange = (fromTime: string, toTime: string): string => {
     if (!fromTime || !toTime) return "";
 

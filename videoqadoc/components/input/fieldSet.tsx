@@ -9,6 +9,8 @@ interface FieldSetProps {
   name?: string;
 }
 
+// mc question - user click on one option to record their answer
+// to the question
 export const FieldSet: React.FC<FieldSetProps> = ({
   question,
   options,

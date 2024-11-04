@@ -31,6 +31,8 @@ const ProgressDropdown: React.FC<ProgressDropdownProps> = ({
   return (
     <Dropdown>
       <DropdownTrigger>
+        {/* on the navbar, user will see % of completedness, if they click on it, it will drop down
+        a list of questions they had and whether they're complete */}
         <Button variant="light" className="min-w-[140px]">
           <div className="w-full">
             <div className="flex justify-between items-center mb-1">
@@ -48,11 +50,12 @@ const ProgressDropdown: React.FC<ProgressDropdownProps> = ({
           </div>
         </Button>
       </DropdownTrigger>
+      {/* dropdown menu for question -> whether they're complete  */}
       <DropdownMenu
         disallowEmptySelection
         selectionMode="single"
         aria-label="Questions"
-        className="max-h-[300px] overflow-y-auto" // Add max height and overflow for scrollable menu
+        className="max-h-[300px] overflow-y-auto" 
       >
         {Object.entries(groupedQuestions).map(([section, sectionQuestions]) => (
           <DropdownSection key={section} title={section}>
