@@ -9,20 +9,7 @@ import {
   Progress,
 } from "@nextui-org/react";
 import { CheckCircle2 } from "lucide-react";
-
-interface Question {
-  id: string;
-  completed: boolean;
-}
-
-interface GroupedQuestions {
-  [section: string]: Question[];
-}
-
-interface ProgressDropdownProps {
-  progressPercentage: number;
-  groupedQuestions: GroupedQuestions;
-}
+import { ProgressDropdownProps } from "@/interfaces";
 
 const ProgressDropdown: React.FC<ProgressDropdownProps> = ({
   progressPercentage,

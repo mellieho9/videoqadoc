@@ -1,18 +1,7 @@
 import { useState } from "react";
 import { Button, TimeInput } from "@nextui-org/react";
 import { Plus, Trash2 } from "lucide-react";
-
-interface TimeRange {
-  id: string;
-  from: string;
-  to: string;
-  error?: string;
-}
-
-interface TimeRangeContainerProps {
-  onChange?: (timeRanges: TimeRange[]) => void;
-  value?: TimeRange[];
-}
+import { TimeRange, TimeRangeContainerProps } from "@/interfaces";
 
 // input for recording timestamps in a vid helping user answer a question
 export const TimeRangeContainer: React.FC<TimeRangeContainerProps> = ({

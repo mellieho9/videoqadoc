@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import {
   Modal,
   ModalContent,
@@ -26,7 +27,7 @@ export const HelpPopup = () => {
                 <Link
                   isExternal
                   showAnchorIcon
-                  href="https://github.com/nextui-org/nextui"
+                  href={siteConfig.contact_email}
                   anchorIcon={<Mail className="ml-2 w-4 h-4" />}
                 >
                   Our email
@@ -34,7 +35,7 @@ export const HelpPopup = () => {
                 <Link
                   isExternal
                   showAnchorIcon
-                  href="https://github.com/nextui-org/nextui"
+                  href={siteConfig.guideline_link}
                   anchorIcon={<Book className="ml-2" />}
                 >
                   Annotation Guideline

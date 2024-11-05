@@ -1,13 +1,7 @@
 import React from "react";
 import { Radio, RadioGroup } from "@nextui-org/radio";
+import { FieldSetProps } from "@/interfaces";
 
-interface FieldSetProps {
-  question: string;
-  options: string[];
-  value?: string;
-  onChange?: (value: string) => void;
-  name?: string;
-}
 
 // mc question - user click on one option to record their answer
 // to the question
