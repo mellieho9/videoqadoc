@@ -1,36 +1,28 @@
 "use client";
 
-import React from "react";
+import React, { useContext } from "react";
 import { Navbar, Button } from "@nextui-org/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { HelpPopup } from "../data/helpPopup";
 import HomeButton from "./homeButton";
 import ProgressDropdown from "./progressDropdown";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/utils/api";
+import { QuestionContext } from "@/app/contexts";
 
 // navbar in the task interface
 const TaskBar = ({ questionIdx }) => {
   // fetch questions
   const {
-    data: questions = [],
+    questions,
     isLoading,
     error,
-  } = useQuery({
-    queryKey: ["questions"],
-    queryFn: api.fetchQuestions,
-  });
+    completedQuestions,
+    progressPercentage,
+    totalQuestions,
+  } = useContext(QuestionContext);
 
   // track idx of question
   const [currentQuestion, setCurrentQuestion] = React.useState(questionIdx);
 
-  // calculate progress
-  const totalQuestions = questions.length;
-  const completedQuestions = questions
-    .flatMap((section) => section)
-    .filter((q) => q.completed).length;
-  const progressPercentage =
-    totalQuestions > 0 ? (completedQuestions / totalQuestions) * 100 : 0;
   const groupedQuestions = questions.reduce(
     (acc, sectionQuestions, outerIndex) => {
       const section = `Section ${outerIndex + 1}`; // use the outer index as the section name

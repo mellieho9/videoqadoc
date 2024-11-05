@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, TimeInput } from "@nextui-org/react";
 import { Plus, Trash2 } from "lucide-react";
 import { TimeRange, TimeRangeContainerProps } from "@/interfaces";
+import { validateTimeRange } from "@/utils/time";
 
 // input for recording timestamps in a vid helping user answer a question
 export const TimeRangeContainer: React.FC<TimeRangeContainerProps> = ({
@@ -11,25 +12,6 @@ export const TimeRangeContainer: React.FC<TimeRangeContainerProps> = ({
   const [timeRanges, setTimeRanges] = useState<TimeRange[]>(
     value || [{ id: "1", from: "", to: "", error: "" }]
   );
-
-  const convertTimeToSeconds = (time: string): number => {
-    if (!time) return 0;
-    const [hours, minutes, seconds] = [time.hour, time.minute, time.second];
-    return hours * 3600 + minutes * 60 + seconds;
-  };
-
-  // validate time and whether end time is earlier than start time
-  const validateTimeRange = (fromTime: string, toTime: string): string => {
-    if (!fromTime || !toTime) return "";
-
-    const fromSeconds = convertTimeToSeconds(fromTime);
-    const toSeconds = convertTimeToSeconds(toTime);
-
-    if (fromSeconds >= toSeconds) {
-      return "End time must be later than start time";
-    }
-    return "";
-  };
 
   const handleTimeChange = (
     id: string,
