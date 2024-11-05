@@ -1,3 +1,10 @@
+import { ThemeProviderProps } from "next-themes/dist/types";
+
+export interface ProvidersProps {
+  children: React.ReactNode;
+  themeProps?: ThemeProviderProps;
+}
+
 export interface TimeRange {
   id: string;
   from: string;

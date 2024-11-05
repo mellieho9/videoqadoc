@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { HelpPopup } from "../data/helpPopup";
 import HomeButton from "./homeButton";
 import ProgressDropdown from "./progressDropdown";
-import { QuestionContext } from "@/app/contexts";
+import { QuestionContext } from "@/config/contexts";
 
 // navbar in the task interface
 const TaskBar = ({ questionIdx }) => {

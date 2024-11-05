@@ -3,7 +3,7 @@ import { QuestionList } from "@/components/data/questionList";
 import HomeBar from "@/components/controller/homebar";
 import { HomeSidebar } from "@/components/data/homeSidebar";
 import { useContext } from "react";
-import { QuestionContext } from "./contexts";
+import { QuestionContext } from "@/config/contexts";
 
 export default function Home() {
   const {
