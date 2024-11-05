@@ -32,7 +32,7 @@ An annotation platform that tracks users' thought processes when answering video
 Open a terminal and run:
 
 ```bash
-cd api
+cd backend
 
 # Create virtual environment (if not already created)
 python3 -m venv venv
@@ -52,7 +52,7 @@ uvicorn main:app --reload --port 8000
 Open another terminal and run:
 
 ```bash
-cd videoqadoc
+cd frontend
 
 # Install dependencies
 npm install
