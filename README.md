@@ -7,6 +7,24 @@ An annotation platform that tracks users' thought processes when answering video
 - Backend: Python (FastAPI)
 - Frontend: Next.js, NextUI, React Query
 
+## File Structure
+
+```
+- backend -> holding backend code
+- frontend -> holding frontend code
+  - app -> pages of the website
+  - components 
+    - controller -> custom components taking users between different pages
+    - data -> custom components showing data to users
+    - input -> custom components allowing users input values
+  - config 
+    - contexts -> setup for global state management
+    - providers -> react providers 
+    - site -> site-wide configuration 
+  - interfaces -> holding all component props
+  - utils -> holding frequently used functions
+```
+
 ## Getting Started
 
 ### Backend Setup
