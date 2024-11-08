@@ -1,3 +1,7 @@
+from typing import List
+from models.question import Question
+
+
 class Video:
     """
     A class to represent a video along with its associated questions.
@@ -11,13 +15,13 @@ class Video:
     Methods:
         __init__(video_id, duration, url, questions):
             Initializes a new Video instance.
-        
+
         parse_video_mme(video_dict):
-            Parses a video dictionary and returns a Video object.
-        
+            Parses a video dictionary from Video-MME and returns a Video object.
+
         __repr__():
             Returns a JSON representation of the Video object.
-        
+
         toJSON():
             Serializes the Video object to a JSON formatted string.
     """
@@ -27,7 +31,9 @@ class Video:
     url: str
     questions: List[Question]
 
-    def __init__(self, video_id: str, duration: str, url: str, questions: List[Question]):
+    def __init__(
+        self, video_id: str, duration: str, url: str, questions: List[Question]
+    ):
         """
         Initializes a new Video instance.
 
@@ -45,7 +51,7 @@ class Video:
     @staticmethod
     def parse_video_mme(video_dict):
         """
-        Parses a video dictionary and returns a Video object.
+        Parses a video dictionary from the Video-MME dataset and returns a Video object.
 
         This method extracts information from a provided video dictionary, including
         its associated questions, and creates a Video instance.
@@ -56,7 +62,12 @@ class Video:
         Returns:
             Video: An instance of the Video class.
         """
-        return Video(video_id=video_dict["video_id"], duration="?", url=video_dict["url"], questions=Question.parse_video_mme(video_dict["questions"]))
+        return Video(
+            video_id=video_dict["video_id"],
+            duration="00:05:00",  # Default duration
+            url=video_dict["url"],
+            questions=Question.parse_video_mme(video_dict["questions"]),
+        )
 
     def __repr__(self):
         """
@@ -66,19 +77,18 @@ class Video:
             str: A JSON formatted string representing the Video object.
         """
         # return self.toJSON()
-        # return f"Video ID: {self.video_id}, Duration: {self.duration}, URL: {self.url}, # of Questions: {len(self.questions)}"
-        return str(self.toJSON())
+        return str(self.to_json())
 
-    def toJSON(self):
+    def to_json(self):
         """
         Serializes the Video object to a JSON formatted string.
 
         Returns:
             str: A JSON formatted string of the Video object.
         """
-        # return json.dumps(
-        #     self,
-        #     default=lambda o: o.__dict__, 
-        #     sort_keys=False,
-        #     indent=indent)
-        return self.__dict__
+        return {
+            "id": self.video_id,
+            "duration": self.duration,
+            "url": self.url,
+            "questions": [q.toJSON() for q in self.questions],
+        }
