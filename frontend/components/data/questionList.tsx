@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
 import {
   Listbox,
@@ -9,34 +9,28 @@ import {
   SelectItem,
 } from "@nextui-org/react";
 import { CheckCircle2 } from "lucide-react";
+import { TaskContext } from "@/config/contexts";
 
-export const QuestionList = ({ questions }) => {
+export const QuestionList = () => {
+  const { tasks } = useContext(TaskContext);
+  console.log(tasks);
+
+  const videos = [];
+  const completedQuestions = new Set();
+
+  tasks.forEach((task) => {
+    videos.push(task["video_id"]);
+    if (task["annotations"]) {
+      task["annotations"].forEach((annotation) =>
+        completedQuestions.add(annotation["question_id"])
+      );
+    }
+  });
+
   const router = useRouter();
-  const [filter, setFilter] = useState("All");
 
-  const [filteredQuestions, setFilteredQuestions] = useState(questions);
-
-  useEffect(() => {
-    if (!questions.length) return;
-
-    const updatedQuestions = questions.map((section) =>
-      section.filter((q) => {
-        switch (filter.currentKey) {
-          case "Complete":
-            return q.completed === true;
-          case "Incomplete":
-            return q.completed === false;
-          default:
-            return true;
-        }
-      })
-    );
-    setFilteredQuestions(updatedQuestions);
-  }, [filter, questions]);
-
-  // when you click on a question, it directs u to the task interface corresponding to that question
-  const handleQuestionClick = (videoIndex, questionIndex, questionId) => {
-    router.push(`/tasks/${videoIndex}/${questionId}`);
+  const handleQuestionClick = (videoIndex, questionId) => {
+    router.push(`/tasks/${videoIndex}/${videoIndex}-${questionId}`);
   };
 
   return (
@@ -44,49 +38,33 @@ export const QuestionList = ({ questions }) => {
       <div className="flex flex-col mb-4">
         <div className="flex flex-row w-full items-center justify-between">
           <h3 className="font-bold">Videos you need to annotate</h3>
-          {/* filter dropdown menu  */}
-          <Select
-            placeholder="Select filter"
-            selectedKeys={filter}
-            onSelectionChange={(key) => setFilter(key)}
-            className="w-1/3 md:w-1/5"
-          >
-            <SelectItem key="All">All</SelectItem>
-            <SelectItem key="Complete">Complete</SelectItem>
-            <SelectItem key="Incomplete">Incomplete</SelectItem>
-          </Select>
         </div>
       </div>
 
-      {/* question list showing each question - whether they're complete */}
+      {/* List of questions with completion status */}
       <div className="flex-grow overflow-y-auto max-h-[500px]">
         <Listbox variant="flat">
-          {filteredQuestions.map(
-            (questionList, videoIndex) =>
-              questionList.length > 0 && (
-                <ListboxSection
-                  key={`section-${videoIndex}`}
-                  title={`Video ${videoIndex + 1}`}
+          {videos.map((video, videoIndex) => (
+            <ListboxSection
+              key={`video-${videoIndex}`}
+              title={`Video ${videoIndex + 1}`}
+            >
+              {[1, 2, 3].map((i) => (
+                <ListboxItem
+                  key={`${videoIndex}-${i}`}
+                  onClick={() => handleQuestionClick(video, i)}
+                  className="cursor-pointer hover:bg-gray-100"
+                  endContent={
+                    completedQuestions.has(i) ? (
+                      <CheckCircle2 className="text-green-500" size={20} />
+                    ) : null
+                  }
                 >
-                  {questionList.map((q, questionIndex) => (
-                    <ListboxItem
-                      key={`question-${videoIndex}-${questionIndex}`}
-                      onClick={() =>
-                        handleQuestionClick(videoIndex, questionIndex, q.id)
-                      }
-                      className="cursor-pointer hover:bg-gray-100"
-                      endContent={
-                        q.completed ? (
-                          <CheckCircle2 className="text-green-500" size={20} />
-                        ) : null
-                      }
-                    >
-                      Question {questionIndex + 1}
-                    </ListboxItem>
-                  ))}
-                </ListboxSection>
-              )
-          )}
+                  Question {i}
+                </ListboxItem>
+              ))}
+            </ListboxSection>
+          ))}
         </Listbox>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { ThemeProviderProps } from "next-themes/dist/types";
 
+// frontend components
 export interface ProvidersProps {
   children: React.ReactNode;
   themeProps?: ThemeProviderProps;
@@ -37,4 +38,13 @@ export interface GroupedQuestions {
 export interface ProgressDropdownProps {
   progressPercentage: number;
   groupedQuestions: GroupedQuestions;
+}
+
+// api functions
+export interface Annotation {
+  id: string;
+  question_id: string;
+  answer: string;
+  time_spent: string 
+  segments_watched: [TimeRange] | null
 }
