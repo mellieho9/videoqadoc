@@ -71,7 +71,7 @@ export default function TaskPage() {
   //   .reduce((acc, num) => acc + num, -1); // sum the numbers
   return (
     <>
-      {/* <TaskBar questionIdx={questionIdx} /> */}
+      <TaskBar />
       {/* video player  */}
       <section className="w-full h-full flex flex-col md:flex-row items-center justify-center p-10 gap-4">
         <div className="w-full md:w-3/4 rounded-md">
