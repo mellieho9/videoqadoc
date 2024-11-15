@@ -3,17 +3,11 @@ import { QuestionList } from "@/components/data/questionList";
 import HomeBar from "@/components/controller/homebar";
 import { HomeSidebar } from "@/components/data/homeSidebar";
 import { useContext } from "react";
-import { QuestionContext } from "@/config/contexts";
+import { TaskContext } from "@/config/contexts";
 
 export default function Home() {
-  const {
-    questions,
-    isLoading,
-    error,
-    completedQuestions,
-    progressPercentage,
-    totalQuestions,
-  } = useContext(QuestionContext);
+  const { isLoading, completedTasks, progressPercentage, totalTasks } =
+    useContext(TaskContext);
   return (
     <div className="flex flex-col">
       <HomeBar />
@@ -21,17 +15,13 @@ export default function Home() {
       <section className="w-full h-full flex flex-col-reverse md:flex-row items-start justify-center gap-10 p-10">
         {/* show all questions user needs to annotate  */}
         <div className="w-full h-full overflow-y-auto md:w-1/2 ">
-          {isLoading ? (
-            <div className="">Loading...</div>
-          ) : (
-            <QuestionList questions={questions} />
-          )}
+          {isLoading ? <div className="">Loading...</div> : <QuestionList />}
         </div>
         {/* show user's progress  */}
         <HomeSidebar
           progressPercentage={progressPercentage}
-          completedQuestions={completedQuestions}
-          totalQuestions={totalQuestions}
+          completedTasks={completedTasks}
+          totalTasks={totalTasks}
         />
       </section>
     </div>

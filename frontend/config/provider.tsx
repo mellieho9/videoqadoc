@@ -6,8 +6,7 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ProvidersProps } from "@/interfaces";
-import { QuestionProvider } from "./contexts";
-
+import { AnnotationProvider, TaskProvider } from "./contexts";
 
 const queryClient = new QueryClient();
 
@@ -16,11 +15,13 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <QuestionProvider>
-        <NextUIProvider navigate={router.push}>
-          <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
-        </NextUIProvider>
-      </QuestionProvider>
+      <TaskProvider>
+        <AnnotationProvider>
+          <NextUIProvider navigate={router.push}>
+            <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
+          </NextUIProvider>
+        </AnnotationProvider>
+      </TaskProvider>
     </QueryClientProvider>
   );
 }

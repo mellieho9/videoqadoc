@@ -11,8 +11,8 @@ import { Book, Mail } from "lucide-react";
 
 export function HomeSidebar({
   progressPercentage,
-  completedQuestions,
-  totalQuestions,
+  completedTasks,
+  totalTasks,
 }) {
   return (
     <div className="flex flex-col w-full md:w-1/3 gap-4">
@@ -33,7 +33,7 @@ export function HomeSidebar({
         </CardBody>
         <CardFooter className="justify-center">
           <p className="text-sm">
-            {completedQuestions} out of {totalQuestions} questions
+            {completedTasks} out of {totalTasks} videos annotated
           </p>
         </CardFooter>
       </Card>
