@@ -66,16 +66,16 @@ Visit `http://localhost:3000` in your browser to access the application.
 ## To-Do List
 
 ### Features & Fixes
-- [ ] Implement submit answer logic to record user responses
+- [x] Implement submit answer logic to record user responses
 - [ ] Add validation for time input to prevent exceeding video duration
 - [ ] Fix video player stopping when user interacts with:
   - Multiple-choice questions
   - Time input fields
 - [ ] Implement tracking of watched video segments
-- [ ] Add backend timer for task duration tracking
+- [x] Add backend timer for task duration tracking
 
 ### Infrastructure
-- [ ] Set up database
+- [x] Set up database
 - [ ] Create data export functionality for analysis
 - [ ] Code cleanup and optimization
 
