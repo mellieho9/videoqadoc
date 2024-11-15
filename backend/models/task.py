@@ -6,7 +6,7 @@ class Task:
         self.created_at = datetime.now()  
         self.video_id = video_id 
         self.annotator = annotator 
-        self.annotations = annotations if annotation else []
+        self.annotations = annotations if annotations else []
     
     def __repr__(self):
         return str(self.to_json())

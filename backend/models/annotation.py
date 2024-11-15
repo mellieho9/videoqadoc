@@ -15,6 +15,6 @@ class Annotation(BaseModel):
         from_attributes = True
 
     def to_json(self):
-        data = self.dict()
+        data = self.dict() # dict() is deprecated
         data["created_at"] = self.created_at.isoformat()  # Convert datetime to string
         return data
