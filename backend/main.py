@@ -1,11 +1,7 @@
-import json
 from contextlib import asynccontextmanager
-from typing import Dict, List
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from services.annotation import AnnotationService
-from services.task import TaskService
 
 from routes.question import router as question_router
 from routes.task import router as task_router

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 from pydantic import BaseModel
 
 class Annotation(BaseModel):
@@ -15,6 +15,6 @@ class Annotation(BaseModel):
         from_attributes = True
 
     def to_json(self):
-        data = self.dict() # dict() is deprecated
+        data = self.dict() # dict() is deprecated, replace with self.model_dump()
         data["created_at"] = self.created_at.isoformat()  # Convert datetime to string
         return data
