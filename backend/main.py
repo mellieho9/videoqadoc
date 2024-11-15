@@ -4,11 +4,14 @@ from typing import Dict, List
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from services.annotation import AnnotationService
 from services.task import TaskService
 
 from routes.question import router as question_router
 from routes.task import router as task_router
 from routes.video import router as video_router
+from routes.annotation import router as annotation_router
+
 
 
 @asynccontextmanager
@@ -33,4 +36,4 @@ app.add_middleware(
 app.include_router(question_router, prefix="/questions", tags=["questions"])
 app.include_router(task_router, prefix="/tasks", tags=["tasks"])
 app.include_router(video_router, prefix="/videos", tags=["videos"])
-
+app.include_router(annotation_router, prefix="/annotations", tags=["annotations"])

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import {
   Listbox,
@@ -9,28 +9,17 @@ import {
   SelectItem,
 } from "@nextui-org/react";
 import { CheckCircle2 } from "lucide-react";
-import { TaskContext } from "@/config/contexts";
+import { AnnotationContext, TaskContext } from "@/config/contexts";
 
 export const QuestionList = () => {
   const { tasks } = useContext(TaskContext);
-  console.log(tasks);
-
-  const videos = [];
-  const completedQuestions = new Set();
-
-  tasks.forEach((task) => {
-    videos.push(task["video_id"]);
-    if (task["annotations"]) {
-      task["annotations"].forEach((annotation) =>
-        completedQuestions.add(annotation["question_id"])
-      );
-    }
-  });
+  const { completedQuestions } = useContext(AnnotationContext);
+  const completedQuestionsSet = new Set(completedQuestions);
 
   const router = useRouter();
 
-  const handleQuestionClick = (videoIndex, questionId) => {
-    router.push(`/tasks/${videoIndex}/${videoIndex}-${questionId}`);
+  const handleQuestionClick = (taskId, i) => {
+    router.push(`/tasks/${taskId}/${i}`);
   };
 
   return (
@@ -44,18 +33,18 @@ export const QuestionList = () => {
       {/* List of questions with completion status */}
       <div className="flex-grow overflow-y-auto max-h-[500px]">
         <Listbox variant="flat">
-          {videos.map((video, videoIndex) => (
+          {tasks.map((task, idx) => (
             <ListboxSection
-              key={`video-${videoIndex}`}
-              title={`Video ${videoIndex + 1}`}
+              key={`${task["video_id"]}`}
+              title={`Video ${idx + 1}`}
             >
               {[1, 2, 3].map((i) => (
                 <ListboxItem
-                  key={`${videoIndex}-${i}`}
-                  onClick={() => handleQuestionClick(video, i)}
+                  key={`${idx}-${i}`}
+                  onClick={() => handleQuestionClick(task["id"], i)}
                   className="cursor-pointer hover:bg-gray-100"
                   endContent={
-                    completedQuestions.has(i) ? (
+                    completedQuestionsSet.has(`${task["video_id"]}-${i}`) ? (
                       <CheckCircle2 className="text-green-500" size={20} />
                     ) : null
                   }

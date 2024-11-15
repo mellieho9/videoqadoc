@@ -15,7 +15,7 @@ class Task:
         return {
             "id": self.id,
             "created_at": self.created_at.isoformat(),
-            "annotator": self.annotator,
+            "video_id": self.annotator,
             "annotator": self.annotator,
             "annotations": self.annotations
         }

@@ -6,16 +6,23 @@ from models.annotation import Annotation
 router = APIRouter()
 
 
-@router.get("/{annotator_id}")
+@router.get("/tasks/{annotator_id}")
 def get_tasks(annotator_id: str):
     data = TaskService.get_tasks(annotator_id)
     if not data:
         raise HTTPException(status_code=404, detail="Tasks not found for this annotator")
     return data
 
+@router.get("/task/{task_id}")
+def get_tasks(task_id: str):
+    data = TaskService.get_task(task_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="Tasks not found for this annotator")
+    return data
+
 @router.post("/{task_id}/submit")
 def add_annotations(task_id: str, annotation: Annotation):
-    data = TaskService.add_annotations(annotation)
+    data = TaskService.add_annotations(task_id,annotation)
     if not data:
         raise HTTPException(status_code=500, detail="Failed to add annotation")
     return data

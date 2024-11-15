@@ -10,6 +10,11 @@ class TaskService:
         return response.data
 
     @staticmethod
+    def get_task(task_id):
+        response = task_table.select("*").eq("id", task_id).execute()
+        return response.data
+
+    @staticmethod
     def add_annotations(task_id, annotation):
         annotation_data = AnnotationService.publish_annotation(annotation.id,
         annotation.question_id,

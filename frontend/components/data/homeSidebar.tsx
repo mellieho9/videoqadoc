@@ -33,7 +33,7 @@ export function HomeSidebar({
         </CardBody>
         <CardFooter className="justify-center">
           <p className="text-sm">
-            {completedTasks} out of {totalTasks} tasks
+            {completedTasks} out of {totalTasks} videos annotated
           </p>
         </CardFooter>
       </Card>
