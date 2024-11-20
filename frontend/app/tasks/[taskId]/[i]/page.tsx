@@ -10,11 +10,13 @@ import { api } from "@/utils/api";
 import { prepareTimeJson } from "@/utils/time";
 import { AnnotationContext } from "@/contexts/annotation";
 import { CustomYouTubeEmbed } from "@/components/data/youtubeEmbed";
+import { Check } from "lucide-react";
 
 export default function TaskPage() {
   const params = useParams();
   const { taskId: taskParamId, i } = params;
-  const { submit } = useContext(AnnotationContext);
+  const { submit, mutation } = useContext(AnnotationContext);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState();
   const [timeRanges, setTimeRanges] = useState([]);
@@ -59,6 +61,7 @@ export default function TaskPage() {
 
   const handleSubmit = () => {
     if (taskParamId && questionId && selectedOption && timeRanges.length > 0) {
+      setIsSubmitted(false); // Reset submission status on new submission
       submit({
         task_id: taskParamId,
         question_id: questionId,
@@ -66,6 +69,9 @@ export default function TaskPage() {
         segments_answered: prepareTimeJson(timeRanges),
         annotator: taskData[0]["annotator"],
       });
+
+      // Listen for mutation success and update the button
+      setIsSubmitted(true);
     }
   };
 
@@ -96,11 +102,12 @@ export default function TaskPage() {
 
           {/* Submit button */}
           <Button
-            color="primary"
-            isDisabled={isSubmitDisabled}
-            onClick={handleSubmit}
+            onPress={handleSubmit}
+            isDisabled={isSubmitDisabled || isSubmitted}
+            color={isSubmitted ? "success" : "primary"}
           >
-            Submit
+            {isSubmitted && <Check />}
+            {isSubmitted ? "Submitted Successfully!" : "Submit"}
           </Button>
         </div>
       </section>

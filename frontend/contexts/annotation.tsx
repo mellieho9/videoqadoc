@@ -92,6 +92,7 @@ export const AnnotationProvider = ({ children }) => {
         completedQuestions,
         setIsActive,
         submit,
+        mutation,
       }}
     >
       {children}

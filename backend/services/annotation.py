@@ -3,7 +3,7 @@ from services.supabase import supabase_client
 
 annotation_table = supabase_client.table("annotations")
 class AnnotationService:
-
+    @staticmethod
     def annotation_already_exists(question_id: str, annotator_id: str): 
         response = annotation_table.select("*").eq("annotator", annotator_id).eq("question_id", question_id).execute()
         data = response.data 
@@ -11,7 +11,7 @@ class AnnotationService:
 
     @staticmethod
     def publish_annotation(id, question_id, answer, time_spent, segments_answered, segments_watched, annotator):
-        if annotation_already_exists(question_id, annotator_id):
+        if AnnotationService.annotation_already_exists(question_id, annotator):
             return None
 
         annotation = Annotation(
