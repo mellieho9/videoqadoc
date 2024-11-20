@@ -9,6 +9,8 @@ class AnnotationService:
         data = response.data 
         return len(data) > 0
 
+    # todo - get the annotation
+    # todo - update the annotation
     @staticmethod
     def publish_annotation(id, question_id, answer, time_spent, segments_answered, segments_watched, annotator):
         if AnnotationService.annotation_already_exists(question_id, annotator):
