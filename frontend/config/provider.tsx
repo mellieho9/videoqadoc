@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ProvidersProps } from "@/interfaces";
-import { AnnotationProvider, TaskProvider } from "./contexts";
+import { TaskProvider } from "@/contexts/task";
+import { AnnotationProvider } from "@/contexts/annotation";
 
 const queryClient = new QueryClient();
 

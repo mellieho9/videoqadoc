@@ -1,15 +1,10 @@
 "use client";
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Listbox,
-  ListboxSection,
-  ListboxItem,
-  Select,
-  SelectItem,
-} from "@nextui-org/react";
+import { Listbox, ListboxSection, ListboxItem } from "@nextui-org/react";
 import { CheckCircle2 } from "lucide-react";
-import { AnnotationContext, TaskContext } from "@/config/contexts";
+import { TaskContext } from "@/contexts/task";
+import { AnnotationContext } from "@/contexts/annotation";
 
 export const QuestionList = () => {
   const { tasks } = useContext(TaskContext);

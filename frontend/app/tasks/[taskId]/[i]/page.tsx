@@ -1,14 +1,15 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import TaskBar from "@/components/controller/taskBar";
 import { FieldSet } from "@/components/input/fieldSet";
 import TimeRangeContainer from "@/components/input/timeRangeContainer";
 import { Button, Divider } from "@nextui-org/react";
-import { YouTubeEmbed } from "@next/third-parties/google";
 import { api } from "@/utils/api";
-import { AnnotationContext } from "@/config/contexts";
+import { prepareTimeJson } from "@/utils/time";
+import { AnnotationContext } from "@/contexts/annotation";
+import { CustomYouTubeEmbed } from "@/components/data/youtubeEmbed";
 
 export default function TaskPage() {
   const params = useParams();
@@ -17,8 +18,8 @@ export default function TaskPage() {
 
   const [selectedOption, setSelectedOption] = useState();
   const [timeRanges, setTimeRanges] = useState([]);
+  const [youtubeVideoId, setYoutubeVideoId] = useState("");
 
-  // Fetch task data based on taskId
   const { data: taskData } = useQuery({
     queryKey: ["task", taskParamId],
     queryFn: () => api.fetchTask(taskParamId),
@@ -26,7 +27,6 @@ export default function TaskPage() {
     onError: (error) => console.error("Error fetching task data:", error),
   });
 
-  // Fetch video data based on videoId
   const videoId = taskData?.[0]?.video_id;
   const { data: videoResponse } = useQuery({
     queryKey: ["video", videoId],
@@ -35,11 +35,15 @@ export default function TaskPage() {
     onError: (error) => console.error("Error fetching video data:", error),
   });
 
-  // Compute questionId only if videoData and i exist
+  useEffect(() => {
+    if (videoResponse && videoResponse[0]?.url) {
+      setYoutubeVideoId(videoResponse[0].url.split("=")[1] || "");
+    }
+  }, [videoResponse]);
+
   const questionId =
     videoResponse?.[0]?.video_id && i ? `${videoResponse[0]["id"]}-${i}` : null;
 
-  // Fetch question data based on questionId
   const { data: questionData, isLoading: isQuestionLoading } = useQuery({
     queryKey: ["question", questionId],
     queryFn: () => api.fetchQuestionData(questionId),
@@ -47,25 +51,24 @@ export default function TaskPage() {
     onError: (error) => console.error("Error fetching question data:", error),
   });
 
-  // Disable submit button if required fields are not filled
+  // disable submit button
   const isSubmitDisabled =
     !selectedOption ||
     timeRanges.length === 0 ||
     timeRanges.some((range) => !range.from || !range.to || range.error);
 
-  // Handle form submission
   const handleSubmit = () => {
     if (taskParamId && questionId && selectedOption && timeRanges.length > 0) {
       submit({
         task_id: taskParamId,
         question_id: questionId,
         answer: selectedOption,
+        segments_answered: prepareTimeJson(timeRanges),
         annotator: taskData[0]["annotator"],
       });
     }
   };
 
-  // Loading state for question data
   if (isQuestionLoading) return <div>Loading...</div>;
 
   return (
@@ -73,9 +76,7 @@ export default function TaskPage() {
       <TaskBar />
       <section className="w-full h-full flex flex-col md:flex-row items-center justify-center p-10 gap-4">
         <div className="w-full md:w-3/4 rounded-md">
-          {videoResponse && (
-            <YouTubeEmbed videoid={videoResponse[0].url.split("=")[1] || ""} />
-          )}
+          {youtubeVideoId && <CustomYouTubeEmbed videoId={youtubeVideoId} />}
         </div>
         <div className="flex flex-col p-5 gap-4">
           {/* Display question and options */}

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Dict
 from pydantic import BaseModel
 
 class Annotation(BaseModel):
@@ -8,13 +8,14 @@ class Annotation(BaseModel):
     question_id: str
     answer: str
     time_spent: int
-    segments_watched: List[str] = []
+    segments_answered: List[Dict] = []
+    segments_watched: List[Dict] = []
     annotator: str
 
     class Config:
         from_attributes = True
 
     def to_json(self):
-        data = self.dict() # dict() is deprecated, replace with self.model_dump()
+        data = self.model_dump() 
         data["created_at"] = self.created_at.isoformat()  # Convert datetime to string
         return data

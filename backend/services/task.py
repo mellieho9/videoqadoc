@@ -20,8 +20,10 @@ class TaskService:
         annotation.question_id,
         annotation.answer,
         annotation.time_spent,
+        annotation.segments_answered,
         annotation.segments_watched,
         annotation.annotator)
+        # do not add task if annotation already exist
         if annotation_data:
             annotation_id = annotation_data[0]["id"] 
 
