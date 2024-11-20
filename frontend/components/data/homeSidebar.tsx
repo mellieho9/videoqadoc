@@ -27,7 +27,7 @@ export function HomeSidebar({
               value: "text-3xl font-semibold text-white",
             }}
             value={progressPercentage}
-            color="primary"
+            color="success"
             showValueLabel={true}
           />
         </CardBody>
