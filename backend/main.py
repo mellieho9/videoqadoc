@@ -7,6 +7,7 @@ from routes.question import router as question_router
 from routes.task import router as task_router
 from routes.video import router as video_router
 from routes.annotation import router as annotation_router
+from routes.auth import router as auth_router
 
 
 
@@ -33,3 +34,4 @@ app.include_router(question_router, prefix="/questions", tags=["questions"])
 app.include_router(task_router, prefix="/tasks", tags=["tasks"])
 app.include_router(video_router, prefix="/videos", tags=["videos"])
 app.include_router(annotation_router, prefix="/annotations", tags=["annotations"])
+app.include_router(auth_router, prefix="/auth", tags=["auth"])
