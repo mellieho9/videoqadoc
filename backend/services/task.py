@@ -38,6 +38,7 @@ class TaskService:
             annotations.append(annotation_id)
 
             update_response = task_table.update({"annotations": annotations}).eq("id", task_id).execute()
+            print("done")
             return update_response.data
         return None
 

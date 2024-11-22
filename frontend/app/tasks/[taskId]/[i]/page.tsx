@@ -9,17 +9,15 @@ import { Button, Divider } from "@nextui-org/react";
 import { api } from "@/utils/api";
 import { prepareTimeJson } from "@/utils/time";
 import { AnnotationContext } from "@/contexts/annotation";
-import { CustomYouTubeEmbed } from "@/components/data/youtubeEmbed";
+import YouTubeEmbed from "@/components/data/youtubeEmbed";
 import { Check } from "lucide-react";
 
 export default function TaskPage() {
   const params = useParams();
   const { taskId: taskParamId, i } = params;
-  const { submit, mutation } = useContext(AnnotationContext);
+  const { submit } = useContext(AnnotationContext);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const [selectedOption, setSelectedOption] = useState();
-  const [timeRanges, setTimeRanges] = useState([]);
   const [youtubeVideoId, setYoutubeVideoId] = useState("");
 
   const { data: taskData } = useQuery({
@@ -53,6 +51,9 @@ export default function TaskPage() {
     onError: (error) => console.error("Error fetching question data:", error),
   });
 
+  const [selectedOption, setSelectedOption] = useState();
+  const [timeRanges, setTimeRanges] = useState([]);
+
   // disable submit button
   const isSubmitDisabled =
     !selectedOption ||
@@ -82,7 +83,7 @@ export default function TaskPage() {
       <TaskBar />
       <section className="w-full h-full flex flex-col md:flex-row items-center justify-center p-10 gap-4">
         <div className="w-full md:w-3/4 rounded-md">
-          {youtubeVideoId && <CustomYouTubeEmbed videoId={youtubeVideoId} />}
+          {youtubeVideoId && <YouTubeEmbed videoId={youtubeVideoId} />}
         </div>
         <div className="flex flex-col p-5 gap-4">
           {/* Display question and options */}

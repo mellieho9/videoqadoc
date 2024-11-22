@@ -8,6 +8,7 @@ export const AnnotationContext = createContext();
 export const AnnotationProvider = ({ children }) => {
   const annotator_id = "27dc91a5-1899-4da7-8548-1a8263477cbc";
   const [timeSpent, setTimeSpent] = useState(0);
+  const [segmentWatched, setSegmentWatched] = useState([]);
   const [isActive, setIsActive] = useState(true);
   const {
     data: completedQuestions = [],
@@ -68,9 +69,9 @@ export const AnnotationProvider = ({ children }) => {
     question_id,
     answer,
     segments_answered,
-    segments_watched = [],
     annotator,
   }) => {
+    const segments_watched = segmentWatched;
     const annotation = new Annotation({
       id: crypto.randomUUID(),
       question_id,
@@ -93,6 +94,7 @@ export const AnnotationProvider = ({ children }) => {
         setIsActive,
         submit,
         mutation,
+        setSegmentWatched,
       }}
     >
       {children}
