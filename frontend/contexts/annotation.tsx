@@ -1,51 +1,14 @@
-import { createContext, useState, useEffect } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { api } from "@/utils/api";
 import { Annotation } from "@/interfaces";
-
-export const TaskContext = createContext();
-
-export const TaskProvider = ({ children }) => {
-  const annotator_id = "27dc91a5-1899-4da7-8548-1a8263477cbc";
-  const {
-    data: tasks = [],
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["tasks", annotator_id],
-    queryFn: () => api.fetchTasks(annotator_id),
-  });
-
-  const [completedTasks, setCompletedTasks] = useState(0);
-  const [progressPercentage, setProgressPercentage] = useState(0);
-  const totalTasks = tasks.length;
-
-  useEffect(() => {
-    const completed = tasks.filter(
-      (task) => task.annotations && task.annotations.length == 3
-    ).length;
-    setCompletedTasks(completed);
-    const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
-    setProgressPercentage(progress);
-  }, [tasks]);
-
-  const value = {
-    tasks,
-    isLoading,
-    error,
-    completedTasks,
-    progressPercentage,
-    totalTasks,
-  };
-
-  return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
-};
+import { api } from "@/utils/api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createContext, useEffect, useState } from "react";
 
 export const AnnotationContext = createContext();
 
 export const AnnotationProvider = ({ children }) => {
   const annotator_id = "27dc91a5-1899-4da7-8548-1a8263477cbc";
   const [timeSpent, setTimeSpent] = useState(0);
+  const [segmentWatched, setSegmentWatched] = useState([]);
   const [isActive, setIsActive] = useState(true);
   const {
     data: completedQuestions = [],
@@ -105,13 +68,15 @@ export const AnnotationProvider = ({ children }) => {
     task_id,
     question_id,
     answer,
-    segments_watched = [],
+    segments_answered,
     annotator,
   }) => {
+    const segments_watched = segmentWatched;
     const annotation = new Annotation({
       id: crypto.randomUUID(),
       question_id,
       answer,
+      segments_answered,
       segments_watched,
       time_spent: timeSpent,
       annotator,
@@ -128,6 +93,8 @@ export const AnnotationProvider = ({ children }) => {
         completedQuestions,
         setIsActive,
         submit,
+        mutation,
+        setSegmentWatched,
       }}
     >
       {children}

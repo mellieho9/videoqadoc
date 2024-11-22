@@ -40,13 +40,29 @@ export interface ProgressDropdownProps {
   groupedQuestions: GroupedQuestions;
 }
 
+export interface SegmentAnswerProp {
+  from: number;
+  to: number;
+}
+
+export interface SegmentWatchedProp {
+  currentTime: number;
+  duration: number;
+  state: number;
+  playbackQuality: string;
+  playbackRate: number;
+  volume: number;
+  timestamp: number;
+}
+
 // api functions
 export class Annotation {
   id: string;
   question_id: string;
   answer: string;
   time_spent: number;
-  segments_watched: TimeRange[] | null;
+  segments_answered: SegmentAnswerProp[];
+  segments_watched: SegmentWatchedProp[];
   annotator: string;
 
   constructor({
@@ -54,6 +70,7 @@ export class Annotation {
     question_id,
     answer,
     time_spent,
+    segments_answered,
     segments_watched,
     annotator,
   }: {
@@ -61,13 +78,15 @@ export class Annotation {
     question_id: string;
     answer: string;
     time_spent: number;
-    segments_watched: TimeRange[] | null;
+    segments_answered: SegmentAnswerProp[];
+    segments_watched: SegmentWatchedProp[];
     annotator: string;
   }) {
     this.id = id;
     this.question_id = question_id;
     this.answer = answer;
     this.time_spent = time_spent;
+    this.segments_answered = segments_answered;
     this.segments_watched = segments_watched;
     this.annotator = annotator;
   }

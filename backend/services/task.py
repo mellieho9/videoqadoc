@@ -20,8 +20,10 @@ class TaskService:
         annotation.question_id,
         annotation.answer,
         annotation.time_spent,
+        annotation.segments_answered,
         annotation.segments_watched,
         annotation.annotator)
+        # do not add task if annotation already exist
         if annotation_data:
             annotation_id = annotation_data[0]["id"] 
 
@@ -36,6 +38,7 @@ class TaskService:
             annotations.append(annotation_id)
 
             update_response = task_table.update({"annotations": annotations}).eq("id", task_id).execute()
+            print("done")
             return update_response.data
         return None
 

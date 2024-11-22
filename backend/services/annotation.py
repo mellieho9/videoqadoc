@@ -5,19 +5,37 @@ annotation_table = supabase_client.table("annotations")
 class AnnotationService:
 
     @staticmethod
-    def publish_annotation(id, question_id, answer, time_spent, segments_watched, annotator):
+    def get_annotation(question_id: str, annotator_id: str): 
+        response = annotation_table.select("*").eq("annotator", annotator_id).eq("question_id", question_id).execute()
+        data = response.data 
+        return data
+
+    @staticmethod
+    def update_annotation(annotation, question_id, annotator):
+        response = annotation_table.update(annotation.to_json()).eq("annotator", annotator).eq("question_id", question_id).execute()
+        data = response.data 
+        return data
+
+    @staticmethod
+    def publish_annotation(id, question_id, answer, time_spent, segments_answered, segments_watched, annotator):
         annotation = Annotation(
             id=id,
             question_id=question_id,
             answer=answer,
             time_spent=time_spent,
+            segments_answered=segments_answered,
             segments_watched=segments_watched,
             annotator=annotator
         )
 
+        if len(AnnotationService.get_annotation(question_id, annotator)) > 0:
+            data = AnnotationService.update_annotation(annotation, question_id, annotator)
+            return data
+
         response = annotation_table.insert(annotation.to_json()).execute()
         return response.data
-
+    
+        
     @staticmethod
     def get_complete_questions(annotator_id: str):
         response = annotation_table.select("question_id").eq("annotator", annotator_id).execute()
