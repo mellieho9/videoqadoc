@@ -14,5 +14,5 @@ async def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()])
     return authorization
 
 @router.post("/me")
-async def test(current_user: Annotated[User, Depends(AuthorizationService.get_user)]):
+async def me(current_user: Annotated[User, Depends(AuthorizationService.get_user)]):
     return current_user.to_json()
