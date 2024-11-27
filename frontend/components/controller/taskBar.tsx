@@ -6,7 +6,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { HelpPopup } from "../data/helpPopup";
 import HomeButton from "./homeButton";
 import ProgressDropdown from "./progressDropdown";
-import { TaskContext } from "@/config/contexts";
 import PageTimeTracker from "../data/pageTimeTracker";
 
 // navbar in the task interface

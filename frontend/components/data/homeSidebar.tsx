@@ -8,12 +8,17 @@ import {
   Link,
 } from "@nextui-org/react";
 import { Book, Mail } from "lucide-react";
+interface HomeSidebarProps {
+  progressPercentage: number;
+  completedTasks: number;
+  totalTasks: number;
+}
 
 export function HomeSidebar({
   progressPercentage,
   completedTasks,
   totalTasks,
-}) {
+}: HomeSidebarProps) {
   return (
     <div className="flex flex-col w-full md:w-1/3 gap-4">
       <Card className="p-5">
@@ -27,7 +32,7 @@ export function HomeSidebar({
               value: "text-3xl font-semibold text-white",
             }}
             value={progressPercentage}
-            color="primary"
+            color="success"
             showValueLabel={true}
           />
         </CardBody>

@@ -1,52 +1,49 @@
-import { createContext, useState, useEffect } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import {
+  Annotation,
+  SegmentAnswerProp,
+  SegmentWatchedProp,
+} from "@/interfaces";
 import { api } from "@/utils/api";
-import { Annotation } from "@/interfaces";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createContext, useEffect, useState, ReactNode } from "react";
 
-export const TaskContext = createContext();
+// Define the context value type
+interface AnnotationContextType {
+  timeSpent: number;
+  isActive: boolean;
+  completedQuestions: any[]; // Replace `any[]` with the actual type if known
+  setIsActive: (isActive: boolean) => void;
+  submit: (params: SubmitParams) => void;
+  mutation: typeof mutation;
+  setSegmentWatched: React.Dispatch<React.SetStateAction<SegmentWatchedProp[]>>;
+}
 
-export const TaskProvider = ({ children }) => {
+// Props type for the AnnotationProvider
+interface AnnotationProviderProps {
+  children: ReactNode;
+}
+
+// Parameters type for the `submit` function
+interface SubmitParams {
+  task_id: string;
+  question_id: string;
+  answer: string;
+  segments_answered: SegmentAnswerProp[];
+  annotator: string;
+}
+
+export const AnnotationContext = createContext<
+  AnnotationContextType | undefined
+>(undefined);
+
+export const AnnotationProvider = ({ children }: AnnotationProviderProps) => {
   const annotator_id = "27dc91a5-1899-4da7-8548-1a8263477cbc";
-  const {
-    data: tasks = [],
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["tasks", annotator_id],
-    queryFn: () => api.fetchTasks(annotator_id),
-  });
+  const [timeSpent, setTimeSpent] = useState<number>(0);
+  const [segmentWatched, setSegmentWatched] = useState<SegmentWatchedProp[]>(
+    []
+  );
+  const [isActive, setIsActive] = useState<boolean>(true);
 
-  const [completedTasks, setCompletedTasks] = useState(0);
-  const [progressPercentage, setProgressPercentage] = useState(0);
-  const totalTasks = tasks.length;
-
-  useEffect(() => {
-    const completed = tasks.filter(
-      (task) => task.annotations && task.annotations.length == 3
-    ).length;
-    setCompletedTasks(completed);
-    const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
-    setProgressPercentage(progress);
-  }, [tasks]);
-
-  const value = {
-    tasks,
-    isLoading,
-    error,
-    completedTasks,
-    progressPercentage,
-    totalTasks,
-  };
-
-  return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
-};
-
-export const AnnotationContext = createContext();
-
-export const AnnotationProvider = ({ children }) => {
-  const annotator_id = "27dc91a5-1899-4da7-8548-1a8263477cbc";
-  const [timeSpent, setTimeSpent] = useState(0);
-  const [isActive, setIsActive] = useState(true);
   const {
     data: completedQuestions = [],
     isLoading,
@@ -58,7 +55,7 @@ export const AnnotationProvider = ({ children }) => {
 
   // Timer logic
   useEffect(() => {
-    let interval;
+    let interval: NodeJS.Timeout | undefined;
     if (isActive) {
       interval = setInterval(() => {
         setTimeSpent((prevTime) => prevTime + 1);
@@ -68,7 +65,7 @@ export const AnnotationProvider = ({ children }) => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
         setIsActive(false);
-        clearInterval(interval);
+        if (interval) clearInterval(interval);
       } else {
         setIsActive(true);
       }
@@ -77,7 +74,7 @@ export const AnnotationProvider = ({ children }) => {
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      clearInterval(interval);
+      if (interval) clearInterval(interval);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [isActive]);
@@ -95,7 +92,7 @@ export const AnnotationProvider = ({ children }) => {
       console.log("Submitted successfully");
     },
 
-    onError: (error) => {
+    onError: (error: unknown) => {
       console.error("Error submitting answer:", error);
     },
   });
@@ -105,13 +102,15 @@ export const AnnotationProvider = ({ children }) => {
     task_id,
     question_id,
     answer,
-    segments_watched = [],
+    segments_answered,
     annotator,
-  }) => {
+  }: SubmitParams) => {
+    const segments_watched = segmentWatched;
     const annotation = new Annotation({
       id: crypto.randomUUID(),
       question_id,
       answer,
+      segments_answered,
       segments_watched,
       time_spent: timeSpent,
       annotator,
@@ -128,6 +127,8 @@ export const AnnotationProvider = ({ children }) => {
         completedQuestions,
         setIsActive,
         submit,
+        mutation,
+        setSegmentWatched,
       }}
     >
       {children}

@@ -4,7 +4,17 @@ const convertTimeToSeconds = (time: string): number => {
   return hours * 3600 + minutes * 60 + seconds;
 };
 
-// validate time and whether end time is earlier than start time
+export const prepareTimeJson = (timeRanges) => {
+  const res = [];
+  for (let timeRange of timeRanges) {
+    res.push({
+      from: convertTimeToSeconds(timeRange.from),
+      to: convertTimeToSeconds(timeRange.to),
+    });
+  }
+  return res;
+};
+
 export const validateTimeRange = (fromTime: string, toTime: string): string => {
   if (!fromTime || !toTime) return "";
 

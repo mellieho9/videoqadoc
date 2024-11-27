@@ -3,11 +3,15 @@ import { QuestionList } from "@/components/data/questionList";
 import HomeBar from "@/components/controller/homebar";
 import { HomeSidebar } from "@/components/data/homeSidebar";
 import { useContext } from "react";
-import { TaskContext } from "@/config/contexts";
+import { TaskContext } from "@/contexts/task";
 
 export default function Home() {
+  const taskContext = useContext(TaskContext);
+  if (!taskContext) {
+    throw new Error("TaskContext must be used within a TaskProvider");
+  }
   const { isLoading, completedTasks, progressPercentage, totalTasks } =
-    useContext(TaskContext);
+    taskContext;
   return (
     <div className="flex flex-col">
       <HomeBar />

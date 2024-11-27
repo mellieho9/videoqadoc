@@ -7,7 +7,7 @@ const PageTimeTracker = () => {
   const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
-    let interval;
+    let interval: ReturnType<typeof setInterval> | undefined; // Using ReturnType to infer the correct type
 
     if (isActive) {
       interval = setInterval(() => {
@@ -18,7 +18,7 @@ const PageTimeTracker = () => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
         setIsActive(false);
-        clearInterval(interval);
+        if (interval) clearInterval(interval); // Clear interval when page visibility changes
       } else {
         setIsActive(true);
       }
@@ -27,12 +27,12 @@ const PageTimeTracker = () => {
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      clearInterval(interval);
+      if (interval) clearInterval(interval); // Clear interval when component unmounts
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [isActive]);
 
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
