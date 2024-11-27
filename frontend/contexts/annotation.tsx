@@ -1,15 +1,49 @@
-import { Annotation } from "@/interfaces";
+import {
+  Annotation,
+  SegmentAnswerProp,
+  SegmentWatchedProp,
+} from "@/interfaces";
 import { api } from "@/utils/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, ReactNode } from "react";
 
-export const AnnotationContext = createContext();
+// Define the context value type
+interface AnnotationContextType {
+  timeSpent: number;
+  isActive: boolean;
+  completedQuestions: any[]; // Replace `any[]` with the actual type if known
+  setIsActive: (isActive: boolean) => void;
+  submit: (params: SubmitParams) => void;
+  mutation: typeof mutation;
+  setSegmentWatched: React.Dispatch<React.SetStateAction<SegmentWatchedProp[]>>;
+}
 
-export const AnnotationProvider = ({ children }) => {
+// Props type for the AnnotationProvider
+interface AnnotationProviderProps {
+  children: ReactNode;
+}
+
+// Parameters type for the `submit` function
+interface SubmitParams {
+  task_id: string;
+  question_id: string;
+  answer: string;
+  segments_answered: SegmentAnswerProp[];
+  annotator: string;
+}
+
+export const AnnotationContext = createContext<
+  AnnotationContextType | undefined
+>(undefined);
+
+export const AnnotationProvider = ({ children }: AnnotationProviderProps) => {
   const annotator_id = "27dc91a5-1899-4da7-8548-1a8263477cbc";
-  const [timeSpent, setTimeSpent] = useState(0);
-  const [segmentWatched, setSegmentWatched] = useState([]);
-  const [isActive, setIsActive] = useState(true);
+  const [timeSpent, setTimeSpent] = useState<number>(0);
+  const [segmentWatched, setSegmentWatched] = useState<SegmentWatchedProp[]>(
+    []
+  );
+  const [isActive, setIsActive] = useState<boolean>(true);
+
   const {
     data: completedQuestions = [],
     isLoading,
@@ -21,7 +55,7 @@ export const AnnotationProvider = ({ children }) => {
 
   // Timer logic
   useEffect(() => {
-    let interval;
+    let interval: NodeJS.Timeout | undefined;
     if (isActive) {
       interval = setInterval(() => {
         setTimeSpent((prevTime) => prevTime + 1);
@@ -31,7 +65,7 @@ export const AnnotationProvider = ({ children }) => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
         setIsActive(false);
-        clearInterval(interval);
+        if (interval) clearInterval(interval);
       } else {
         setIsActive(true);
       }
@@ -40,7 +74,7 @@ export const AnnotationProvider = ({ children }) => {
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      clearInterval(interval);
+      if (interval) clearInterval(interval);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [isActive]);
@@ -58,7 +92,7 @@ export const AnnotationProvider = ({ children }) => {
       console.log("Submitted successfully");
     },
 
-    onError: (error) => {
+    onError: (error: unknown) => {
       console.error("Error submitting answer:", error);
     },
   });
@@ -70,7 +104,7 @@ export const AnnotationProvider = ({ children }) => {
     answer,
     segments_answered,
     annotator,
-  }) => {
+  }: SubmitParams) => {
     const segments_watched = segmentWatched;
     const annotation = new Annotation({
       id: crypto.randomUUID(),

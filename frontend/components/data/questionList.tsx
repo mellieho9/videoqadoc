@@ -7,13 +7,21 @@ import { TaskContext } from "@/contexts/task";
 import { AnnotationContext } from "@/contexts/annotation";
 
 export const QuestionList = () => {
-  const { tasks } = useContext(TaskContext);
-  const { completedQuestions } = useContext(AnnotationContext);
+  const taskContext = useContext(TaskContext);
+  if (!taskContext) {
+    throw new Error("TaskContext needs to be used in TaskProvider");
+  }
+  const { tasks } = taskContext;
+  const annotationContext = useContext(AnnotationContext);
+  if (!annotationContext) {
+    throw new Error("AnnotationContext needs to be used in AnnotationProvider");
+  }
+  const { completedQuestions } = annotationContext;
   const completedQuestionsSet = new Set(completedQuestions);
 
   const router = useRouter();
 
-  const handleQuestionClick = (taskId, i) => {
+  const handleQuestionClick = (taskId: string, i: number) => {
     router.push(`/tasks/${taskId}/${i}`);
   };
 
@@ -29,17 +37,14 @@ export const QuestionList = () => {
       <div className="flex-grow overflow-y-auto max-h-[500px]">
         <Listbox variant="flat">
           {tasks.map((task, idx) => (
-            <ListboxSection
-              key={`${task["video_id"]}`}
-              title={`Video ${idx + 1}`}
-            >
+            <ListboxSection key={idx} title={`Video ${idx + 1}`}>
               {[1, 2, 3].map((i) => (
                 <ListboxItem
                   key={`${idx}-${i}`}
                   onClick={() => handleQuestionClick(task["id"], i)}
                   className="cursor-pointer hover:bg-gray-100"
                   endContent={
-                    completedQuestionsSet.has(`${task["video_id"]}-${i}`) ? (
+                    completedQuestionsSet.has(`${task.video_id}-${i}`) ? (
                       <CheckCircle2 className="text-green-500" size={20} />
                     ) : null
                   }

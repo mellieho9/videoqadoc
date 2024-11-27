@@ -6,8 +6,12 @@ import { useContext } from "react";
 import { TaskContext } from "@/contexts/task";
 
 export default function Home() {
+  const taskContext = useContext(TaskContext);
+  if (!taskContext) {
+    throw new Error("TaskContext must be used within a TaskProvider");
+  }
   const { isLoading, completedTasks, progressPercentage, totalTasks } =
-    useContext(TaskContext);
+    taskContext;
   return (
     <div className="flex flex-col">
       <HomeBar />

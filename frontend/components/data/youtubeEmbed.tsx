@@ -2,20 +2,34 @@
 import { AnnotationContext } from "@/contexts/annotation";
 import { useContext, useEffect } from "react";
 
+interface PlayerData {
+  currentTime: number;
+  duration: number;
+  state: number;
+  playbackQuality: string;
+  playbackRate: number;
+  volume: number;
+  timestamp: number;
+}
+
 const YouTubeEmbed = ({ videoId = "M7lc1UVf-VE" }) => {
-  const { setSegmentWatched } = useContext(AnnotationContext);
+  const annotationContext = useContext(AnnotationContext);
+  if (!annotationContext) {
+    throw new Error("AnnotationContext needs to be in AnnotationProvider");
+  }
+  const { setSegmentWatched } = annotationContext;
 
   useEffect(() => {
     // Dynamically load YouTube IFrame API script
     const tag = document.createElement("script");
     tag.src = "https://www.youtube.com/iframe_api";
     const firstScriptTag = document.getElementsByTagName("script")[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    firstScriptTag?.parentNode?.insertBefore(tag, firstScriptTag);
 
-    let videoInteractions = [];
+    let videoInteractions: PlayerData[] = [];
 
     window.onYouTubeIframeAPIReady = () => {
-      new YT.Player("player", {
+      new window.YT.Player("player", {
         height: "360",
         width: "100%",
         videoId: videoId,
@@ -55,7 +69,7 @@ const YouTubeEmbed = ({ videoId = "M7lc1UVf-VE" }) => {
       if (window.YT && window.YT.Player) {
         const player = document.getElementById("player");
         if (player) {
-          clearInterval(player.intervalId); // Clear interval
+          clearInterval(player.intervalId);
           player.remove();
         }
       }

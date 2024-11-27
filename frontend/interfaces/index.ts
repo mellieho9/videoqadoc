@@ -22,7 +22,7 @@ export interface FieldSetProps {
   question: string;
   options: string[];
   value?: string;
-  onChange?: (value: string) => void;
+  onChange?: (value: string | undefined) => void;
   name?: string;
 }
 

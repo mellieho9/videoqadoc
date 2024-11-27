@@ -11,20 +11,37 @@ import { prepareTimeJson } from "@/utils/time";
 import { AnnotationContext } from "@/contexts/annotation";
 import YouTubeEmbed from "@/components/data/youtubeEmbed";
 import { Check } from "lucide-react";
+import { TimeRange } from "@/interfaces";
+
+interface Question {
+  question: string;
+  choices: string[];
+}
 
 export default function TaskPage() {
   const params = useParams();
   const { taskId: taskParamId, i } = params;
-  const { submit } = useContext(AnnotationContext);
+  const taskId = Array.isArray(taskParamId) ? taskParamId[0] : taskParamId;
+  const annotationContext = useContext(AnnotationContext);
+  if (!annotationContext) {
+    throw new Error(
+      "AnnotationContext must be used within a AnnotationProvider"
+    );
+  }
+  const { submit } = annotationContext;
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [youtubeVideoId, setYoutubeVideoId] = useState("");
 
   const { data: taskData } = useQuery({
-    queryKey: ["task", taskParamId],
-    queryFn: () => api.fetchTask(taskParamId),
-    enabled: !!taskParamId,
-    onError: (error) => console.error("Error fetching task data:", error),
+    queryKey: ["task", taskId],
+    queryFn: () => {
+      if (!taskId) {
+        throw new Error("Task ID is required");
+      }
+      return api.fetchTask(taskId);
+    },
+    enabled: !!taskId,
   });
 
   const videoId = taskData?.[0]?.video_id;
@@ -32,7 +49,6 @@ export default function TaskPage() {
     queryKey: ["video", videoId],
     queryFn: () => api.fetchVideoData(videoId),
     enabled: !!videoId,
-    onError: (error) => console.error("Error fetching video data:", error),
   });
 
   useEffect(() => {
@@ -44,27 +60,37 @@ export default function TaskPage() {
   const questionId =
     videoResponse?.[0]?.video_id && i ? `${videoResponse[0]["id"]}-${i}` : null;
 
-  const { data: questionData, isLoading: isQuestionLoading } = useQuery({
+  const { data: questionData, isLoading: isQuestionLoading } = useQuery<
+    Question[]
+  >({
     queryKey: ["question", questionId],
-    queryFn: () => api.fetchQuestionData(questionId),
+    queryFn: () => {
+      if (!questionId) {
+        throw new Error("Question ID cannot be null");
+      }
+      return api.fetchQuestionData(questionId);
+    },
     enabled: !!questionId,
-    onError: (error) => console.error("Error fetching question data:", error),
   });
 
-  const [selectedOption, setSelectedOption] = useState();
-  const [timeRanges, setTimeRanges] = useState([]);
+  const [selectedOption, setSelectedOption] = useState<string | undefined>(
+    undefined
+  );
+  const [timeRanges, setTimeRanges] = useState<TimeRange[]>([]); 
 
   // disable submit button
   const isSubmitDisabled =
     !selectedOption ||
     timeRanges.length === 0 ||
-    timeRanges.some((range) => !range.from || !range.to || range.error);
+    timeRanges.some(
+      (range: TimeRange) => !range.from || !range.to || range.error
+    );
 
   const handleSubmit = () => {
     if (taskParamId && questionId && selectedOption && timeRanges.length > 0) {
       setIsSubmitted(false); // Reset submission status on new submission
       submit({
-        task_id: taskParamId,
+        task_id: taskId,
         question_id: questionId,
         answer: selectedOption,
         segments_answered: prepareTimeJson(timeRanges),
@@ -86,14 +112,15 @@ export default function TaskPage() {
           {youtubeVideoId && <YouTubeEmbed videoId={youtubeVideoId} />}
         </div>
         <div className="flex flex-col p-5 gap-4">
-          {/* Display question and options */}
-          {questionData && (
+          {questionData?.length ? (
             <FieldSet
               question={questionData[0].question || ""}
               options={questionData[0].choices || []}
               value={selectedOption}
               onChange={setSelectedOption}
             />
+          ) : (
+            <p>No question available</p>
           )}
 
           <Divider />
